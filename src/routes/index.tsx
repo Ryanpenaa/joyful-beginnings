@@ -1,24 +1,75 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { BookOpen, Check, ChevronDown, ClipboardCheck, Clock3, Download, FileText, GraduationCap, LockKeyhole, Menu, MonitorSmartphone, ShieldCheck, Target, Wallet, Zap } from "lucide-react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
-export const Route = createFileRoute("/")({
-  component: Index,
-});
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+export const Route = createFileRoute("/")({ component: Index });
+const PRICE = "R$ 28,90";
+const topics = [
+  {icon:BookOpen,title:"Apostilas por matéria",desc:"Conteúdos para construir sua base teórica e organizar os estudos de acordo com seu objetivo."},
+  {icon:GraduationCap,title:"Livros de apoio",desc:"Leituras e materiais complementares para reforçar os assuntos importantes."},
+  {icon:ClipboardCheck,title:"Simulados e exercícios",desc:"Treine, encontre suas dificuldades e evolua praticando questões."},
+  {icon:FileText,title:"Provas anteriores",desc:"Conheça a estrutura, a cobrança e o nível das avaliações de edições anteriores."},
+  {icon:Zap,title:"Bizus estratégicos",desc:"Resumos e dicas para revisões rápidas e um estudo mais direcionado."},
+  {icon:MonitorSmartphone,title:"Materiais digitais",desc:"Consulte seus arquivos no celular, tablet ou computador, onde for mais conveniente."},
+];
+const faqs = [
+  ["Estou começando do zero. Serve para mim?","Sim. O pacote reúne diferentes recursos para apoiar quem está iniciando e quem já estuda para concursos militares."],
+  ["Para quais concursos é indicado?","A proposta contempla materiais de apoio para ESA, EEAR e Escola de Aprendizes-Marinheiros. Cada seleção tem edital e requisitos próprios; consulte sempre o edital vigente."],
+  ["Como recebo o material?","O acesso aos arquivos digitais será disponibilizado após a confirmação do pagamento, conforme as instruções enviadas na compra."],
+  ["Preciso pagar mensalidade?","Não. A oferta anunciada é um pagamento único de R$ 28,90."],
+  ["Posso imprimir?","Arquivos fornecidos em formato adequado poderão ser impressos para uso pessoal."],
+  ["As provas são reais?","As provas anteriores incluídas devem ser identificadas por ano e concurso e corresponder aos documentos divulgados pelas instituições."],
+  ["O material garante aprovação?","Não. O desempenho e a aprovação dependem da dedicação, dos requisitos e das etapas de cada concurso."],
+];
+function BuyButton({ label="QUERO MEU PACOTE POR R$ 28,90", checkout=false }: {label?:string;checkout?:boolean}) {
+  if (checkout) return <div className="w-full"><button type="button" disabled title="Aguardando configuração do checkout" className="w-full cursor-not-allowed rounded-xl bg-lime-500/70 px-5 py-4 text-center text-base font-black tracking-wide text-[#092418] shadow-lg md:text-lg">{label}</button><p className="mt-2 text-center text-xs text-slate-500">Checkout ainda não configurado. Insira seu link de pagamento antes de publicar.</p></div>;
+  return <a href="#oferta" className="block w-full rounded-xl bg-lime-400 px-5 py-4 text-center text-base font-black tracking-wide text-[#082516] shadow-[0_9px_30px_rgba(163,230,53,.2)] transition hover:-translate-y-0.5 hover:bg-lime-300 md:text-lg">{label} →</a>;
+}
+function Bundle({ small=false }: {small?:boolean}) {
+  const books=[["APOSTILAS","TEORIA ORGANIZADA"],["LIVROS","APOIO AO ESTUDO"],["SIMULADOS","TREINO PRÁTICO"],["PROVAS","EDIÇÕES ANTERIORES"],["BIZUS","REVISÃO RÁPIDA"]];
+  return <div aria-label="Mockup ilustrativo do pacote digital com apostilas, livros, simulados, provas anteriores e bizus" role="img" className={"relative mx-auto w-full max-w-[670px] overflow-hidden rounded-3xl border border-lime-300/15 bg-[radial-gradient(ellipse_at_45%_18%,#426646_0%,#1c382c_34%,#0c1c17_75%)] px-3 pt-9 pb-7 shadow-[0_20px_70px_rgba(0,0,0,.3)] md:px-7 "+(small?"md:max-w-[540px]":"")}>
+   <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-transparent via-yellow-400 to-transparent"/>
+   <p className="mb-4 text-center text-[10px] font-bold tracking-[.3em] text-yellow-300 md:text-xs">PACOTE DIGITAL DE PREPARAÇÃO</p>
+   <div className="flex items-end justify-center gap-1.5 md:gap-3">
+    {books.map(([name,sub],i)=><div key={name} className={"relative flex h-32 w-[19%] flex-col justify-between rounded-sm border-l-4 border-l-amber-400/70 border-r border-r-lime-100/30 bg-gradient-to-br from-[#385a3a] via-[#1d342a] to-[#0c1814] p-1.5 text-center shadow-[8px_10px_15px_rgba(0,0,0,.4)] md:h-48 md:p-3 "+(i===2?"-translate-y-2":"")}>
+     <span className="text-[7px] font-extrabold text-amber-300 md:text-[10px]">★ CARREIRA MILITAR</span>
+     <span className="break-words text-[10px] font-black text-white md:text-lg">{name}</span>
+     <span className="text-[6px] font-medium text-lime-100/80 md:text-[9px]">{sub}</span>
+     <div className="mx-auto h-1 w-7 bg-amber-400"/>
+    </div>)}
+   </div>
+   <div className="relative mx-auto mt-5 grid max-w-[475px] grid-cols-[1.5fr_1fr] items-end gap-3">
+     <div className="rounded-lg border-[6px] border-slate-900 bg-slate-900 shadow-2xl"><div className="min-h-20 rounded-sm bg-[#f2f5eb] p-2 md:min-h-28"><div className="rounded bg-[#19382b] px-2 py-1 text-[8px] font-bold text-lime-200 md:text-xs">MINHA PREPARAÇÃO</div><div className="mt-2 space-y-1.5">{["Matérias organizadas","Questões e simulados","Revisão e bizus"].map(t=><div key={t} className="flex items-center gap-2 text-[7px] text-slate-700 md:text-[10px]"><span className="h-2 w-2 rounded-full bg-lime-600"/> {t}</div>)}</div></div><div className="mx-auto h-1.5 w-[115%] -translate-x-[6%] rounded-b-lg bg-gradient-to-b from-slate-500 to-slate-900"/></div>
+     <div className="relative mb-1 rounded-lg bg-[#f4efdd] p-3 shadow-xl -rotate-3"><span className="text-[8px] font-black text-slate-700 md:text-xs">SIMULADO 01</span><div className="mt-2 space-y-2">{Array.from({length:4}).map((_,i)=><div key={i} className="flex gap-1"><span className="mr-1 text-[7px] text-slate-600">{i+1}.</span>{Array.from({length:5}).map((_,j)=><span key={j} className="h-2 w-2 rounded-full border border-slate-400 md:h-3 md:w-3"/>)}</div>)}</div></div>
+   </div>
+   <div className="mt-6 flex flex-wrap justify-center gap-2">{["ESA","EEAR","EAM"].map(x=><span key={x} className="rounded-full border border-yellow-400/30 bg-yellow-300/10 px-4 py-1 text-xs font-bold text-yellow-200">{x}</span>)}</div>
+   <p className="mt-3 text-center text-[10px] text-white/50">Representação ilustrativa dos materiais digitais</p>
+  </div>;
+}
+function Index(){
+ const [open,setOpen]=useState<number|null>(0);
+ return <main className="min-h-screen bg-[#f7f8f2] text-[#17352a]">
+  <div className="bg-[#09291e] px-4 py-2 text-center text-[11px] font-extrabold tracking-wider text-yellow-300 md:text-sm">🎖️ SUA PREPARAÇÃO PARA A CARREIRA MILITAR COMEÇA AQUI</div>
+  <section className="relative overflow-hidden bg-[radial-gradient(ellipse_at_50%_10%,#254f3b_0%,#0d271d_55%,#061711_100%)] px-4 pb-16 pt-12 text-white md:pt-20">
+   <div className="pointer-events-none absolute inset-0 opacity-20" style={{backgroundImage:"linear-gradient(135deg,transparent 45%,rgba(234,179,8,.2) 46%,transparent 47%)",backgroundSize:"95px 95px"}}/>
+   <div className="relative mx-auto max-w-6xl">
+    <div className="mx-auto max-w-4xl text-center">
+     <span className="inline-flex rounded-full border border-yellow-400/30 bg-yellow-400/10 px-4 py-2 text-xs font-extrabold uppercase tracking-widest text-yellow-300">Pacote completo de preparação militar</span>
+     <h1 className="mt-6 text-4xl font-black uppercase leading-[1.06] tracking-tight md:text-6xl lg:text-7xl">SEJA <span className="text-yellow-400">SARGENTO DE CARREIRA</span> DAS FORÇAS ARMADAS</h1>
+     <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-200 md:text-2xl">Pare de perder tempo procurando apostilas e provas espalhadas pela internet. <strong className="text-white">Reúna seus materiais em um único pacote digital</strong> e foque nos estudos.</p>
     </div>
-  );
+    <div className="mx-auto mt-9 max-w-3xl"><Bundle/></div>
+    <div className="mx-auto mt-8 max-w-2xl"><div className="mb-5 grid gap-2 text-sm text-slate-100 sm:grid-cols-2">{["Apostilas e livros de apoio","Provas anteriores e simulados","Bizus para revisar melhor","Estude de onde quiser"].map(t=><span key={t} className="flex items-center gap-2"><Check size={17} className="text-lime-400"/>{t}</span>)}</div><div className="mb-3 text-center text-sm font-bold text-yellow-300">ACESSO COMPLETO • PAGAMENTO ÚNICO</div><div className="mb-5 text-center text-5xl font-black md:text-6xl">{PRICE}</div><BuyButton/><p className="mt-4 text-center text-xs text-slate-300">📩 Entrega digital após a confirmação do pagamento • Sem mensalidade</p></div>
+   </div>
+  </section>
+  <section className="px-4 py-20"><div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2"><div><span className="font-bold uppercase tracking-wider text-amber-700">O problema não é só falta de esforço</span><h2 className="mt-3 text-3xl font-black md:text-5xl">Você passa mais tempo <span className="text-[#478245]">procurando material</span> do que estudando?</h2><p className="mt-5 text-lg leading-relaxed text-slate-600">Uma apostila aqui, um PDF ali, depois horas procurando simulados e provas anteriores. Quando vê, o dia passou e você nem começou a estudar de verdade.</p><p className="mt-4 text-lg font-semibold">Nossa proposta é simples: menos tempo pesquisando, mais tempo praticando.</p></div><div className="rounded-3xl border border-green-200 bg-white p-7 shadow-xl md:p-10"><div className="space-y-6">{[["01","Pare de procurar materiais separados"],["02","Tenha conteúdos organizados por objetivo"],["03","Estude, pratique e revise com mais foco"]].map(([n,t])=><div key={n} className="flex items-center gap-5"><span className="text-3xl font-black text-[#76a04a]">{n}</span><p className="text-lg font-bold">{t}</p></div>)}</div></div></div></section>
+  <section className="bg-white px-4 py-20"><div className="mx-auto max-w-6xl"><div className="mx-auto mb-12 max-w-3xl text-center"><span className="text-sm font-bold uppercase tracking-widest text-green-700">O que você recebe</span><h2 className="mt-3 text-3xl font-black md:text-5xl">Um pacote. Vários materiais. <span className="text-[#579342]">Um objetivo.</span></h2></div><div className="grid gap-5 md:grid-cols-3">{topics.map(({icon:Icon,title,desc})=><article key={title} className="rounded-2xl border border-green-100 bg-[#f8faf4] p-7 shadow-sm"><div className="mb-5 inline-flex rounded-xl bg-[#dcebd0] p-3 text-green-800"><Icon size={27}/></div><h3 className="text-xl font-extrabold">{title}</h3><p className="mt-3 leading-relaxed text-slate-600">{desc}</p></article>)}</div><div className="mx-auto mt-10 max-w-xl"><BuyButton label="QUERO ACESSAR O PACOTE COMPLETO"/></div></div></section>
+  <section className="bg-[#103325] px-4 py-20 text-white"><div className="mx-auto max-w-6xl text-center"><span className="font-bold uppercase tracking-wider text-yellow-300">Sua meta é uma carreira militar?</span><h2 className="mx-auto mt-3 max-w-3xl text-3xl font-black md:text-5xl">Materiais direcionados aos concursos militares</h2><div className="mt-12 grid gap-5 md:grid-cols-3">{[["🪖","ESA","Escola de Sargentos das Armas — Exército Brasileiro"],["✈️","EEAR","Escola de Especialistas de Aeronáutica — Força Aérea"],["⚓","EAM","Escolas de Aprendizes-Marinheiros — ingresso na Marinha"]].map(([emoji,head,body])=><div key={head} className="rounded-2xl border border-white/20 bg-white/10 p-8"><div className="text-4xl">{emoji}</div><h3 className="mt-4 text-3xl font-black text-yellow-300">{head}</h3><p className="mt-3 text-slate-200">{body}</p></div>)}</div><p className="mx-auto mt-7 max-w-3xl text-sm text-white/65">Cada concurso tem requisitos, disciplinas e etapas próprias. A EAM é uma porta de entrada para a carreira na Marinha, não um ingresso direto como sargento. Consulte sempre o edital vigente.</p></div></section>
+  <section className="px-4 py-20"><div className="mx-auto max-w-6xl"><h2 className="mb-10 text-center text-3xl font-black md:text-5xl">Mais tempo para o que <span className="text-green-700">realmente importa</span></h2><div className="grid gap-5 md:grid-cols-3">{[{icon:Wallet,title:"Economize dinheiro",text:"Um único pacote em vez de buscar e adquirir vários materiais avulsos."},{icon:Clock3,title:"Economize tempo",text:"Reduza as buscas e dedique mais horas ao seu cronograma."},{icon:Target,title:"Treine com foco",text:"Resolva provas e exercícios para identificar os assuntos que exigem mais atenção."}].map(({icon:Icon,title,text})=><div key={title} className="rounded-2xl bg-white p-8 shadow-md"><Icon className="mb-4 text-[#4a893b]" size={34}/><h3 className="text-xl font-black">{title}</h3><p className="mt-2 text-slate-600">{text}</p></div>)}</div></div></section>
+  <section id="oferta" className="scroll-mt-4 bg-white px-4 py-20"><div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2"><Bundle small/><div><span className="font-bold uppercase tracking-widest text-green-700">Invista na sua preparação</span><h2 className="mt-3 text-3xl font-black md:text-5xl">Tudo reunido. <span className="text-green-700">Um preço único.</span></h2><p className="mt-4 text-lg text-slate-600">Apostilas, livros, simulados, provas anteriores e bizus em um pacote digital para organizar seus estudos.</p><div className="my-7 rounded-2xl border border-green-200 bg-[#f6faef] p-6"><div className="text-sm font-extrabold uppercase tracking-wider text-green-800">Pacote completo • sem mensalidade</div><div className="my-3 text-5xl font-black text-[#143c28] md:text-6xl">{PRICE}</div><ul className="space-y-2 text-sm font-medium">{["Pagamento único","Materiais digitais","Preparação com mais praticidade"].map(t=><li key={t} className="flex gap-2"><Check className="text-green-700" size={18}/>{t}</li>)}</ul></div><BuyButton checkout/><p className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-500"><LockKeyhole size={14}/> Configure seu checkout antes de iniciar as vendas</p></div></div></section>
+  <section className="bg-[#f1f5e9] px-4 py-20"><div className="mx-auto max-w-6xl"><div className="text-center"><span className="font-bold text-green-800">MATERIAIS COMPLEMENTARES</span><h2 className="mt-3 text-3xl font-black md:text-5xl">Organização também faz parte da preparação</h2><p className="mx-auto mt-4 max-w-2xl text-slate-600">Sugestões de bônus para adicionar ao pacote quando os arquivos estiverem prontos.</p></div><div className="mt-10 grid gap-5 md:grid-cols-3">{[["Planejador de estudos","Modelo para organizar matérias, horários e revisões."],["Checklist do candidato","Acompanhe documentos, prazos e etapas conforme o edital."],["Guia de revisão","Técnicas para analisar erros e revisar com questões." ]].map(([a,b],i)=><div key={a} className="rounded-2xl bg-white p-7 shadow"><span className="text-xs font-extrabold text-green-700">BÔNUS SUGERIDO {i+1}</span><h3 className="mt-3 text-xl font-black">{a}</h3><p className="mt-2 text-slate-600">{b}</p></div>)}</div></div></section>
+  <section className="px-4 py-20"><div className="mx-auto max-w-3xl"><h2 className="mb-10 text-center text-3xl font-black md:text-5xl">Perguntas frequentes</h2><div className="space-y-3">{faqs.map(([q,a],i)=><div key={q} className="overflow-hidden rounded-xl border border-green-100 bg-white"><button type="button" onClick={()=>setOpen(open===i?null:i)} aria-expanded={open===i} className="flex w-full items-center justify-between gap-4 p-5 text-left font-bold"><span>{q}</span><ChevronDown className={"shrink-0 transition "+(open===i?"rotate-180":"")} size={20}/></button>{open===i&&<p className="px-5 pb-5 leading-relaxed text-slate-600">{a}</p>}</div>)}</div></div></section>
+  <section className="bg-[#0e2e22] px-4 py-16 text-center text-white"><div className="mx-auto max-w-3xl"><span className="text-sm font-extrabold uppercase tracking-widest text-yellow-300">Seu primeiro passo pode ser hoje</span><h2 className="mt-4 text-3xl font-black md:text-5xl">Menos tempo procurando. Mais tempo estudando.</h2><p className="mt-5 text-lg text-white/80">Comece a construir sua rotina de preparação com o pacote de materiais digitais.</p><p className="mt-7 text-5xl font-black text-yellow-300">{PRICE}</p><div className="mx-auto mt-6 max-w-xl"><a href="#oferta" className="block rounded-xl bg-lime-400 px-5 py-4 text-lg font-black text-[#09291e]">VER MEU PACOTE COMPLETO →</a></div></div></section>
+  <footer className="bg-[#061b13] px-4 py-9 text-center text-xs leading-relaxed text-slate-400"><p className="font-bold text-slate-200">SEJA SARGENTO DE CARREIRA — PREPARAÇÃO MILITAR</p><p className="mx-auto mt-3 max-w-3xl">Produto educacional independente, sem vínculo oficial ou endosso do Exército Brasileiro, Marinha do Brasil ou Força Aérea Brasileira. Não há promessa ou garantia de aprovação.</p><p className="mt-4">© {new Date().getFullYear()} Todos os direitos reservados.</p></footer>
+ </main>;
 }
